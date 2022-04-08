@@ -8,9 +8,9 @@ import (
 )
 
 var (
-	accessKeyId     = "LTAI5t91bV3kbdSM5k3BjxWt"
-	accessKeySecret = "aIsBwKzvOeRfFST8jhhnd3YF6Er2Md"
-	domain          = "dysmsapi.aliyuncs.com"
+	accessKeyId     = ""
+	accessKeySecret = ""
+	domain          = ""
 )
 
 type SmsService struct {
