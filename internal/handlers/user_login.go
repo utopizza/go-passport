@@ -1,4 +1,4 @@
-package service
+package handlers
 
 import (
 	"log"
@@ -6,9 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	accountService "github.com/utopizza/go-passport/account/service"
 	"github.com/utopizza/go-passport/consts"
-	sessionService "github.com/utopizza/go-passport/session/service"
+	"github.com/utopizza/go-passport/internal/account"
+	"github.com/utopizza/go-passport/internal/session"
 )
 
 func UserLogin(ctx *gin.Context) {
@@ -26,7 +26,7 @@ func UserLogin(ctx *gin.Context) {
 	}
 
 	// 根据登录名，查帐号信息
-	accountInfo, err := accountService.ReadAccountInfoByName(ctx, loginName)
+	accountInfo, err := account.ReadAccountInfoByName(ctx, loginName)
 	if err != nil {
 		log.Printf("failed to read account, err:%+v", err)
 		ctx.JSON(http.StatusOK, gin.H{
@@ -57,7 +57,7 @@ func UserLogin(ctx *gin.Context) {
 	}
 
 	// 创建session数据（是否需要清除旧的session？让其自然过期）
-	sessionData, err := sessionService.CreateSession(ctx, accountInfo.UserId)
+	sessionData, err := session.CreateSession(ctx, accountInfo.UserId)
 	if err != nil {
 		log.Printf("failed to create session, err:%+v", err)
 		ctx.JSON(http.StatusOK, gin.H{
@@ -90,7 +90,7 @@ func UserLogout(ctx *gin.Context) {
 	}
 
 	// 查session
-	sessionData, err := sessionService.ReadSession(ctx, sessionKey)
+	sessionData, err := session.ReadSession(ctx, sessionKey)
 	if err != nil {
 		log.Printf("failed to read session from redis, err:%+v", err)
 		ctx.JSON(http.StatusOK, gin.H{
@@ -110,7 +110,7 @@ func UserLogout(ctx *gin.Context) {
 	}
 
 	// 注销登录态
-	if err := sessionService.DeleteSession(ctx, sessionKey); err != nil {
+	if err := session.DeleteSession(ctx, sessionKey); err != nil {
 		log.Printf("failed to delete session, error:%+v", err)
 		ctx.JSON(http.StatusOK, gin.H{
 			"code": consts.CodeServerInnerError,

@@ -1,22 +1,42 @@
-package service
+package session
 
 import (
 	"context"
 	"encoding/json"
 	"errors"
+	"time"
 
 	"github.com/go-redis/redis/v8"
-
-	"github.com/utopizza/go-passport/session/model"
+	"github.com/google/uuid"
 )
 
-func CreateSession(ctx context.Context, userId int64) (*model.SessionData, error) {
+const (
+	DefaultExpireTime = time.Minute * 1
+)
+
+type SessionData struct {
+	Key        string
+	Version    string
+	UserId     int64
+	ExpireTime time.Duration
+}
+
+func NewSessionData(userId int64) *SessionData {
+	return &SessionData{
+		Key:        uuid.New().String(),
+		Version:    "1.0",
+		UserId:     userId,
+		ExpireTime: DefaultExpireTime,
+	}
+}
+
+func CreateSession(ctx context.Context, userId int64) (*SessionData, error) {
 	rdb := GetRDB()
 	if rdb == nil {
 		return nil, redis.ErrClosed
 	}
 
-	sessionData := model.NewSessionData(userId)
+	sessionData := NewSessionData(userId)
 	val, err := json.Marshal(sessionData)
 	if err != nil {
 		return nil, err
@@ -34,7 +54,7 @@ func CreateSession(ctx context.Context, userId int64) (*model.SessionData, error
 	return sessionData, nil
 }
 
-func ReadSession(ctx context.Context, sessionKey string) (*model.SessionData, error) {
+func ReadSession(ctx context.Context, sessionKey string) (*SessionData, error) {
 	rdb := GetRDB()
 	if rdb == nil {
 		return nil, redis.ErrClosed
@@ -48,7 +68,7 @@ func ReadSession(ctx context.Context, sessionKey string) (*model.SessionData, er
 		return nil, nil
 	}
 
-	var sessionData model.SessionData
+	var sessionData SessionData
 	if err := json.Unmarshal([]byte(val), &sessionData); err != nil {
 		return nil, err
 	}

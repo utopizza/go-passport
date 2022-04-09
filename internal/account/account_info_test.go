@@ -1,18 +1,16 @@
-package service
+package account
 
 import (
 	"context"
 	"testing"
 	"time"
-
-	"github.com/utopizza/go-passport/account/model"
 )
 
 func TestCreateAccountInfo(t *testing.T) {
 	ctx := context.Background()
 
 	// create
-	accountInfo := &model.AccountInfo{
+	accountInfo := &AccountInfo{
 		Id:             1,
 		UserId:         1,
 		AccountGroupId: 0,

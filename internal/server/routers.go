@@ -1,9 +1,9 @@
-package router
+package server
 
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/utopizza/go-passport/goapi/service"
+	"github.com/utopizza/go-passport/internal/handlers"
 )
 
 func GetRouter() *gin.Engine {
@@ -31,7 +31,7 @@ func GetRouter() *gin.Engine {
 	router.POST("/passport/auth/login_only/", nil)
 
 	// 帐密登录（手机号/用户名/邮箱+密码）
-	router.POST("/passport/user/login/", service.UserLogin)
+	router.POST("/passport/user/login/", handlers.UserLogin)
 	router.GET("/passport/password/check/", nil)
 
 	// 二维码扫码登录
@@ -41,7 +41,7 @@ func GetRouter() *gin.Engine {
 	router.POST("/passport/mobile/confirm_qr_code/", nil)
 
 	// 登出
-	router.POST("/passport/user/logout", service.UserLogout)
+	router.POST("/passport/user/logout", handlers.UserLogout)
 
 	// 帐号注销
 	router.POST("/passport/cancel/check/", nil)
