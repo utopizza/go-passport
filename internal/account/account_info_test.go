@@ -3,7 +3,6 @@ package account
 import (
 	"context"
 	"testing"
-	"time"
 )
 
 func TestCreateAccountInfo(t *testing.T) {
@@ -11,16 +10,12 @@ func TestCreateAccountInfo(t *testing.T) {
 
 	// create
 	accountInfo := &AccountInfo{
-		Id:             1,
-		UserId:         1,
-		AccountGroupId: 0,
-		ScreenName:     "utopizza",
-		Password:       "321",
-		Status:         0,
-		Gender:         0,
-		Idc:            "LF",
-		CreateTime:     time.Now(),
-		ModifyTime:     time.Now(),
+		Id:         1,
+		UserId:     1,
+		ScreenName: "utopizza",
+		Password:   "321",
+		Status:     0,
+		Gender:     0,
 	}
 	if err := CreateAccountInfo(ctx, accountInfo); err != nil {
 		t.Fatal(err)

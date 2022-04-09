@@ -28,23 +28,17 @@ func createSQLite() *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
-	_, err = db.Exec("create database if not exists passport")
-	if err != nil {
-		panic(err)
-	}
 
 	// create tables
 	tables := []string{
+		"account_info.sql",
 		"account_connect.sql",
-		"account_delete.sql",
 		"account_device.sql",
 		"account_email.sql",
-		"account_info.sql",
-		"account_login_name.sql",
 		"account_mobile.sql",
 	}
 	for _, tb := range tables {
-		filePath := path.Join("./configs/schema", tb)
+		filePath := path.Join("../../configs/schema", tb)
 		bytes, err := ioutil.ReadFile(filePath)
 		if err != nil {
 			panic(err)
