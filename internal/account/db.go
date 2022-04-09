@@ -18,7 +18,7 @@ func init() {
 
 func createSQLite() *gorm.DB {
 	// dir and file
-	dbDir := "./data"
+	dbDir := "../../data"
 	dbFile := path.Join(dbDir, "sqlite.db")
 
 	// create database

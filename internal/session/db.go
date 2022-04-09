@@ -1,18 +1,27 @@
 package session
 
-import "github.com/go-redis/redis/v8"
+import (
+	"github.com/alicebob/miniredis/v2"
+	"github.com/go-redis/redis/v8"
+)
 
-var defaultRDB *redis.Client
+var db *redis.Client
 
 func init() {
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
-	defaultRDB = rdb
+	db = createMiniRedis()
 }
 
 func GetRDB() *redis.Client {
-	return defaultRDB
+	return db
+}
+
+func createMiniRedis() *redis.Client {
+	mr, err := miniredis.Run()
+	if err != nil {
+		panic(err)
+	}
+	rdb := redis.NewClient(&redis.Options{
+		Addr: mr.Addr(),
+	})
+	return rdb
 }
